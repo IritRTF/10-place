@@ -1,0 +1,18 @@
+name: "Close stale PRs"
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v3
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          skip-stale-pr-message: true
+          stale-pr-message: "skip"
+          close-pr-message: "🤖 Злые роботы закрыли ваш PR за неактивность. Если это несправедливое угнетение, обратитесь за помощью к ближайшему человеку."
+          days-before-stale: 30
+          days-before-close: 0

@@ -1,0 +1,101 @@
+.container {
+  width: 100%;
+  max-width: 65rem;
+  min-height: 100%;
+  margin: 0 auto;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-areas:
+    "h"
+    "f"
+    "m";
+  grid-template-columns: 100%;
+  grid-template-rows: 4rem 3rem 1fr;
+  grid-gap: 1rem;
+  user-select: none;
+}
+
+.container:not(.ready) > * {
+  visibility: hidden;
+}
+
+.container:not(.ready) #start {
+  visibility: visible;
+}
+
+#start {
+  grid-area: h;
+  visibility: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}
+
+#palette {
+  grid-area: h;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-flow: row nowrap;
+  padding: 0.25rem;
+  overflow-x: auto;
+}
+
+.palette__color {
+  position: relative;
+  width: 3rem;
+  min-width: 3rem;
+  height: 3rem;
+  min-height: 3rem;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 0 1px #fff, 0 0 0 2px #000;
+  margin: 0 0.5rem;
+}
+
+.palette__checkbox {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  left: -99999px;
+  top: -99999px;
+}
+
+.palette__name {
+  width: 100%;
+  height: 100%;
+  transition: 0.1s border-radius ease-out;
+}
+
+.palette__checkbox:hover ~ .palette__name,
+.palette__checkbox:focus ~ .palette__name {
+  border-radius: 20%;
+}
+
+.palette__checkbox:checked ~ .palette__name {
+  border-radius: 50%;
+}
+
+#timer {
+  grid-area: f;
+  font-size: 3rem;
+  font-weight: bold;
+  font-family: "Courier New", monospace;
+  display: flex;
+  justify-content: center;
+}
+
+.main__canvas {
+  grid-area: m;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#canvas {
+  box-shadow: 0 0 0 2px;
+}
