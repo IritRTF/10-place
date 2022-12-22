@@ -14,5 +14,10 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.6"
+  },
+  "prettier": {
+    "tabWidth": 2,
+    "semi": true,
+    "singleQuote": true
   }
 }

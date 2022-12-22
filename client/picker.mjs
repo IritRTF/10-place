@@ -1,3 +1,10 @@
+const HOST = 'http://localhost:5000'
+
+const API = {
+  COLORS_URL: `${HOST}/colors`
+}
+
+
 const setAttributes = (element, object) => {
   for (const [key, value] of Object.entries(object)) {
     element.setAttribute(key, value);
@@ -5,7 +12,7 @@ const setAttributes = (element, object) => {
 };
 
 const drawPalette = async () => {
-  const colors = hardcodedColors;
+  const colors = (await fetch(API.COLORS_URL).then(res => res.json())).colors;
   pickedColor = colors[0];
   const palette = document.querySelector("#palette");
   const fragment = document.createDocumentFragment();
