@@ -1,6 +1,7 @@
 import timeout from "./timeout.mjs";
 import drawer from "./drawer.mjs";
 import picker from "./picker.mjs";
+import { json } from "express";
 
 document.querySelector("#start").addEventListener("submit", e => {
   e.preventDefault();
@@ -10,11 +11,24 @@ document.querySelector("#start").addEventListener("submit", e => {
 
 const main = apiKey => {
   const ws = connect(apiKey);
-  ws.addEventListener("message", console.log);
+  ws.addEventListener("message", (msg => {
+    let colorsArr = JSON.parse(msg.data);
+    console.log(colorsArr.payload.place);
+    drawer.putArray(colorsArr.payload.place);
+  }));
 
   timeout.next = new Date();
   drawer.onClick = (x, y) => {
-    drawer.put(x, y, picker.color);
+    // drawer.put(x, y, picker.color);
+    let msg = {
+      type: "color",
+      payload: {
+        x: x,
+        y: y,
+        color: picker.color,
+      }
+    };
+    ws.send(JSON.stringify(msg));
   };
 };
 
