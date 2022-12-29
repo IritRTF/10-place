@@ -10,11 +10,20 @@ document.querySelector("#start").addEventListener("submit", e => {
 
 const main = apiKey => {
   const ws = connect(apiKey);
-  ws.addEventListener("message", console.log);
-
+  // ws.addEventListener("message", console.log);
+  ws.addEventListener("message", (message) => {
+    const dataJSON = JSON.parse(message.data);
+    if (dataJSON.type === 'place') 
+      drawer.putArray(dataJSON.payload.place)
+    else if (dataJSON.type === 'click') 
+      drawer.put(dataJSON.payload.x, dataJSON.payload.y, dataJSON.payload.color)
+  });
   timeout.next = new Date();
   drawer.onClick = (x, y) => {
-    drawer.put(x, y, picker.color);
+    // drawer.put(x, y, picker.color);
+    ws.send(JSON.stringify({
+        type: 'click', payload: { x, y, color: picker.color }
+      }));
   };
 };
 
