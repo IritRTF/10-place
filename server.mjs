@@ -56,10 +56,9 @@ const server = app.listen(port);
 
 const wss = new WebSocket.Server({
   noServer: true,
-  // port: port,
 });
 
-function sendMsg(ws) {
+function sendMsg(ws, place) {
   let msg = {
     type: "place",
     payload: {
@@ -73,16 +72,13 @@ wss.on('connection', function connection(ws) {
   ws.on('message', function message(data) {
     console.log('received: %s', data);
     let dataJSON = JSON.parse(data);
+    console.log(dataJSON);
     if (dataJSON.type === 'click' && dataJSON.payload.x >= 0 && dataJSON.payload.y >= 0){
       place[dataJSON.payload.x + dataJSON.payload.y * size] = dataJSON.payload.color
-      wss.clients.forEach(function each(client) {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(JSON.stringify(dataJSON));
-        }
-      })
+      wss.clients.forEach(client => client.send(JSON.stringify(dataJSON)));
     }
   });
-  sendMsg(ws);
+  sendMsg(ws, place);
 });
 
 server.on("upgrade", (req, socket, head) => {
