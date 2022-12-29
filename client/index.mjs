@@ -11,17 +11,26 @@ document.querySelector("#start").addEventListener("submit", e => {
 
 const main = apiKey => {
   const ws = connect(apiKey);
-  ws.addEventListener("message", (msg => {
-    let colorsArr = JSON.parse(msg.data);
-    console.log(colorsArr.payload.place);
-    drawer.putArray(colorsArr.payload.place);
-  }));
+  ws.addEventListener("message", (message) => {
+    const dataJSON = JSON.parse(message.data);
+    if (dataJSON.type === 'place') {
+      drawer.putArray(dataJSON.payload.place)
+    }
+    else if (dataJSON.type === 'click') {
+      drawer.put(dataJSON.payload.x, dataJSON.payload.y, dataJSON.payload.color)
+    }
+  });
+  // (msg => {
+  //   let colorsArr = JSON.parse(msg.data);
+  //   console.log(colorsArr.payload.place);
+  //   drawer.putArray(colorsArr.payload.place);
+  // }));
 
   timeout.next = new Date();
   drawer.onClick = (x, y) => {
     // drawer.put(x, y, picker.color);
     let msg = {
-      type: "color",
+      type: "click",
       payload: {
         x: x,
         y: y,

@@ -72,6 +72,15 @@ function sendMsg(ws) {
 wss.on('connection', function connection(ws) {
   ws.on('message', function message(data) {
     console.log('received: %s', data);
+    let dataJSON = JSON.parse(data);
+    if (dataJSON.type === 'click' && dataJSON.payload.x >= 0 && dataJSON.payload.y >= 0){
+      place[dataJSON.payload.x + dataJSON.payload.y * size] = dataJSON.payload.color
+      wss.clients.forEach(function each(client) {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify(dataJSON));
+        }
+      })
+    }
   });
   sendMsg(ws);
 });

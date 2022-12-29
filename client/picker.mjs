@@ -40,17 +40,6 @@ const drawPalette = async () => {
   palette.appendChild(fragment);
 };
 
-const hardcodedColors = [
-  "#140c1c",
-  "#30346d",
-  "#854c30",
-  "#d04648",
-  "#597dce",
-  "#8595a1",
-  "#d2aa99",
-  "#dad45e",
-];
-
 let pickedColor = null;
 
 drawPalette().catch(console.error);
