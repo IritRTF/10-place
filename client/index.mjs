@@ -10,11 +10,20 @@ document.querySelector("#start").addEventListener("submit", e => {
 
 const main = apiKey => {
   const ws = connect(apiKey);
-  ws.addEventListener("message", console.log);
+  ws.addEventListener("message",(message)=>{
+    let mes = JSON.parse(message.data);
+    if (mes.type === 'update Place'){
+      drawer.putArray(mes.payload.place)
+    }
+    else if(mes.type === 'click'){
+      console.log(mes);
+      drawer.put(mes.payload.x,mes.payload.y,mes.payload.color);
+    }
+  });
 
   timeout.next = new Date();
   drawer.onClick = (x, y) => {
-    drawer.put(x, y, picker.color);
+    ws.send(JSON.stringify({type:'click',payload:{x:x,y:y,color:picker.color}}));
   };
 };
 
