@@ -43,6 +43,9 @@ const app = express();
 
 app.use(express.static(path.join(process.cwd(), "client")));
 
+app.get('/api/colors' , (req,res)=>{
+  res.json({colors:colors});
+});
 app.get("/*", (_, res) => {
   res.send("Place(holder)");
 });
@@ -50,7 +53,37 @@ app.get("/*", (_, res) => {
 const server = app.listen(port);
 
 const wss = new WebSocket.Server({
-  noServer: true,
+  noServer:true
+});
+
+const validate = (x, y ,color)=>{
+  let pointX = x>=0 && x<=256;
+  let pointY = y>=0 && y<=256;
+  let col =colors.indexOf(color) != -1;
+  console.log(col)
+  return pointX&&pointY&&col
+}
+
+wss.on('connection', function connection(ws) {
+  console.log('con!');
+  ws.on('error', console.error);
+
+  ws.on('message', function message(data) {
+    console.log('received: %s', data);
+    let mes = JSON.parse(data);
+    if (mes.type === 'click'){
+      if(validate(mes.payload.x,mes.payload.y,mes.payload.color)){
+        place[mes.payload.x + mes.payload.y*size] = mes.payload.color;
+        wss.clients.forEach(function each(client) {
+          if (client.readyState === WebSocket.OPEN) {
+            client.send(data);
+          }
+        });
+      } 
+    }
+  });
+
+  ws.send(JSON.stringify({type:'update Place' , payload : {place:place}}));
 });
 
 server.on("upgrade", (req, socket, head) => {
